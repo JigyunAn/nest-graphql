@@ -1,7 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from 'src/auth/auth.module';
-import { User } from './entity/user.entity';
+import { User } from './entities/user.entity';
 import { UserResolver } from './user.resolver';
 import { UserService } from './user.service';
 

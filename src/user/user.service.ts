@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user-dto';
 import { EditUserDto } from './dto/edit-user-dto';
 import { LoginUserDto, LoginUserOutputDto } from './dto/login-user-dto';
-import { User } from './entity/user.entity';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
@@ -35,7 +35,7 @@ export class UserService {
   async login(loginUserDto: LoginUserDto): Promise<LoginUserOutputDto> {
     try {
       const userInfo = await this.userRepository.findOne(
-        { email: loginUserDto.email },
+        { email: loginUserDto.email, use_yn: true },
         { select: ['idx', 'email', 'password'] },
       );
 
@@ -57,7 +57,10 @@ export class UserService {
     editUsetDto: EditUserDto,
   ): Promise<OutputDto> {
     try {
-      const userInfo = await this.userRepository.findOne({ idx: userIdx });
+      const userInfo = await this.userRepository.findOne({
+        idx: userIdx,
+        use_yn: true,
+      });
 
       if (editUsetDto.email) {
         userInfo.email = editUsetDto.email;

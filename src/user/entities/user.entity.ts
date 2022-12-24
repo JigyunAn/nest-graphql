@@ -5,11 +5,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException } from '@nestjs/common';
+import { Board } from 'src/board/entities/board.entity';
+import { Comment } from 'src/board/entities/comment.entity';
+import { ReComment } from 'src/board/entities/re_comment.entity';
 
 @ObjectType()
 @Entity()
@@ -41,6 +45,18 @@ export class User {
   @UpdateDateColumn()
   @Field(() => Date, { nullable: true })
   updated_at: Date;
+
+  @Field(() => [Board])
+  @OneToMany(() => Board, (board) => board.user)
+  boards: Board[];
+
+  @Field(() => [Comment])
+  @OneToMany(() => Comment, (comment) => comment.uesr)
+  comments: Comment[];
+
+  @Field(() => [ReComment])
+  @OneToMany(() => ReComment, (reComment) => reComment.user)
+  reComments: ReComment[];
 
   @BeforeInsert()
   @BeforeUpdate()

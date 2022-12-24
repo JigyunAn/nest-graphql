@@ -4,7 +4,7 @@ import { OutputDto } from 'src/common/output.dto';
 import { CreateUserDto } from './dto/create-user-dto';
 import { EditUserDto } from './dto/edit-user-dto';
 import { LoginUserDto, LoginUserOutputDto } from './dto/login-user-dto';
-import { User } from './entity/user.entity';
+import { User } from './entities/user.entity';
 import { UserService } from './user.service';
 
 @Resolver((of) => User)
@@ -32,7 +32,7 @@ export class UserResolver {
   }
 
   @Query(() => OutputDto)
-  deleteUser(@AuthUser() authUser: User) {
+  deleteUser(@AuthUser() authUser: User): Promise<OutputDto> {
     return this.userService.deleteUser(authUser.idx);
   }
 }

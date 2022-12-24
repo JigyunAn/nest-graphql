@@ -2,6 +2,53 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type ReComment {
+  idx: Int!
+  description: String!
+  created_at: DateTime
+  updated_at: DateTime
+  comment: Comment!
+  user: User!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Comment {
+  idx: Int!
+  description: String!
+  created_at: DateTime
+  updated_at: DateTime
+  uesr: User!
+  board: Board!
+  reComments: [ReComment!]!
+}
+
+type Board {
+  idx: Int!
+  title: String!
+  description: String!
+  created_at: DateTime
+  updated_at: DateTime
+  user: User!
+  comments: [Comment!]!
+}
+
+type User {
+  idx: Int!
+  email: String!
+  password: String!
+  nickname: String!
+  use_yn: Boolean!
+  created_at: DateTime
+  updated_at: DateTime
+  boards: [Board!]!
+  comments: [Comment!]!
+  reComments: [ReComment!]!
+}
+
 type OutputDto {
   error: String
   status: Boolean!
