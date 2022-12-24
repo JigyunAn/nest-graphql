@@ -4,17 +4,23 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMConfig } from './config/typeorm.config';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(typeORMConfig),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      debug: false,
-      playground: false,
+      debug: true,
+      playground: true,
       autoSchemaFile: 'schema.gql',
+      context: ({ req }) => {
+        return { token: req.headers['token'] };
+      },
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

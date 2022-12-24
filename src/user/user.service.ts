@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AuthService } from 'src/auth/auth.service';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user-dto';
 import { EditUserDto } from './dto/edit-user-dto';
-import { loginUserDto } from './dto/login-user-dto';
+import { LoginUserDto } from './dto/login-user-dto';
 import { User } from './entity/user.entity';
 
 @Injectable()
@@ -11,6 +12,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly authService: AuthService,
   ) {}
 
   async createUser(createUserDto: CreateUserDto): Promise<boolean> {
@@ -24,40 +26,46 @@ export class UserService {
       await this.userRepository.save(this.userRepository.create(createUserDto));
 
       return true;
-    } catch (err) {}
-    return false;
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
   }
 
-  async login(loginUserDto: loginUserDto): Promise<boolean> {
+  async login(loginUserDto: LoginUserDto): Promise<string> {
     try {
-      const userInfo = await this.userRepository.findOne({
-        email: loginUserDto.email,
-      });
+      const userInfo = await this.userRepository.findOne(
+        { email: loginUserDto.email },
+        { select: ['idx', 'email', 'password'] },
+      );
       if (!userInfo) {
-        return false;
       }
 
       const passwordCheck = await userInfo.checkPassword(loginUserDto.password);
       if (!passwordCheck) {
-        return false;
       }
 
-      return true;
+      return this.authService.getToken(userInfo);
     } catch (err) {
-      return false;
+      throw new InternalServerErrorException(err);
     }
   }
 
-  async editUser(userId: number, editUsetDto: EditUserDto): Promise<boolean> {
+  async editUser(userIdx: number, editUsetDto: EditUserDto): Promise<boolean> {
     try {
-      // authGuard 구현후 id 받아와서 나머지 구현
-      const userInfo = await this.userRepository.update(userId, {
-        ...editUsetDto,
-      });
+      const userInfo = await this.userRepository.findOne({ idx: userIdx });
+
+      if (editUsetDto.email) {
+        userInfo.email = editUsetDto.email;
+      }
+
+      if (editUsetDto.password) {
+        userInfo.password = editUsetDto.password;
+      }
+      await this.userRepository.save(userInfo);
 
       return true;
     } catch (err) {
-      return false;
+      throw new InternalServerErrorException(err);
     }
   }
 
@@ -67,7 +75,16 @@ export class UserService {
         use_yn: false,
       });
       return true;
-    } catch (err) {}
-    return true;
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
+  }
+
+  async findById(userId: number): Promise<User> {
+    try {
+      return await this.userRepository.findOne({ idx: userId });
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
   }
 }

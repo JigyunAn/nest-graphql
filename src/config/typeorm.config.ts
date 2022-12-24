@@ -7,6 +7,6 @@ export const typeORMConfig: TypeOrmModuleOptions = {
   username: 'jigyun',
   password: '123123',
   database: 'nest-graphql',
-  entities: [__dirname + '../**/*.entity.{js,ts}'],
+  entities: ['dist/**/*.entity.{ts,js}'],
   synchronize: true,
 };

@@ -3,8 +3,10 @@ import {
   BeforeInsert,
   BeforeUpdate,
   Column,
+  CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException } from '@nestjs/common';
@@ -28,15 +30,15 @@ export class User {
   @Field(() => String)
   nickname: string;
 
-  @Column({ default: false, type: 'boolean' })
+  @Column({ default: true, type: 'boolean' })
   @Field(() => Boolean)
   use_yn: boolean;
 
-  @Column({ type: 'date' })
-  @Field(() => Date)
+  @CreateDateColumn()
+  @Field(() => Date, { nullable: true })
   created_at: Date;
 
-  @Column({ nullable: true, type: 'date' })
+  @UpdateDateColumn()
   @Field(() => Date, { nullable: true })
   updated_at: Date;
 

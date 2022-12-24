@@ -3,5 +3,28 @@
 # ------------------------------------------------------
 
 type Query {
-  test: String!
+  deleteUser: String!
+}
+
+type Mutation {
+  createUser(input: CreateUserDto!): Boolean!
+  login(input: LoginUserDto!): String!
+  editUser(input: EditUserDto!): String!
+}
+
+input CreateUserDto {
+  email: String!
+  password: String!
+  nickname: String!
+}
+
+input LoginUserDto {
+  email: String!
+  password: String!
+}
+
+input EditUserDto {
+  email: String
+  password: String
+  nickname: String
 }
