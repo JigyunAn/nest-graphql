@@ -1,10 +1,9 @@
-import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { AuthUser } from 'src/auth/auth.decorator';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { OutputDto } from 'src/common/output.dto';
 import { CreateUserDto } from './dto/create-user-dto';
 import { EditUserDto } from './dto/edit-user-dto';
-import { LoginUserDto } from './dto/login-user-dto';
+import { LoginUserDto, LoginUserOutputDto } from './dto/login-user-dto';
 import { User } from './entity/user.entity';
 import { UserService } from './user.service';
 
@@ -12,26 +11,28 @@ import { UserService } from './user.service';
 export class UserResolver {
   constructor(private readonly userService: UserService) {}
 
-  @Mutation(() => Boolean)
-  createUser(@Args('input') createUserDto: CreateUserDto): Promise<boolean> {
+  @Mutation(() => OutputDto)
+  createUser(@Args('input') createUserDto: CreateUserDto): Promise<OutputDto> {
     return this.userService.createUser(createUserDto);
   }
 
-  @Mutation(() => String)
-  login(@Args('input') loginUserDto: LoginUserDto): Promise<string> {
+  @Mutation(() => LoginUserOutputDto)
+  login(
+    @Args('input') loginUserDto: LoginUserDto,
+  ): Promise<LoginUserOutputDto> {
     return this.userService.login(loginUserDto);
   }
 
-  @Mutation(() => String)
+  @Mutation(() => OutputDto)
   editUser(
     @AuthUser() authUser: User,
     @Args('input') editUserDto: EditUserDto,
-  ): Promise<boolean> {
+  ): Promise<OutputDto> {
     return this.userService.editUser(authUser.idx, editUserDto);
   }
 
-  @Query(() => String)
-  deleteUser() {
-    return 'test';
+  @Query(() => OutputDto)
+  deleteUser(@AuthUser() authUser: User) {
+    return this.userService.deleteUser(authUser.idx);
   }
 }

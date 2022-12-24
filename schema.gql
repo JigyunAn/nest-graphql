@@ -2,14 +2,25 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type OutputDto {
+  error: String
+  status: Boolean!
+}
+
+type LoginUserOutputDto {
+  error: String
+  status: Boolean!
+  token: String
+}
+
 type Query {
-  deleteUser: String!
+  deleteUser: OutputDto!
 }
 
 type Mutation {
-  createUser(input: CreateUserDto!): Boolean!
-  login(input: LoginUserDto!): String!
-  editUser(input: EditUserDto!): String!
+  createUser(input: CreateUserDto!): OutputDto!
+  login(input: LoginUserDto!): LoginUserOutputDto!
+  editUser(input: EditUserDto!): OutputDto!
 }
 
 input CreateUserDto {
