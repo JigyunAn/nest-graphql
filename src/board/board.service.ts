@@ -5,7 +5,7 @@ import { User } from 'src/user/entities/user.entity';
 import { Like, Repository } from 'typeorm';
 import { AddCommentDto } from './dto/add-comment-dto';
 import { AddReCommentDto } from './dto/add-re-comment.dto';
-import { BoardOutputDto } from './dto/board.dto';
+import { BoardOutputDto, BoardsOutputDto } from './dto/board.dto';
 import { CreateBoardDto } from './dto/create-board-dto';
 import { Board } from './entities/board.entity';
 import { Comment } from './entities/comment.entity';
@@ -41,7 +41,7 @@ export class BoardService {
     }
   }
 
-  async findAllBoard(): Promise<BoardOutputDto> {
+  async findAllBoard(): Promise<BoardsOutputDto> {
     try {
       const board = await this.boardRepository.find({
         where: {
@@ -55,7 +55,19 @@ export class BoardService {
     }
   }
 
-  async serchBoard(keyword: string): Promise<BoardOutputDto> {
+  async findBoardById(boardIdx: number): Promise<BoardOutputDto> {
+    try {
+      const board = await this.boardRepository.findOne({
+        where: { idx: boardIdx, use_yn: true },
+      });
+
+      return { status: true, board };
+    } catch (err) {
+      return { status: false, error: err };
+    }
+  }
+
+  async serchBoard(keyword: string): Promise<BoardsOutputDto> {
     try {
       const board = await this.boardRepository.find({
         where: [
@@ -87,7 +99,7 @@ export class BoardService {
     }
   }
 
-  async findBoardByUser(userIdx: number): Promise<BoardOutputDto> {
+  async findBoardByUser(userIdx: number): Promise<BoardsOutputDto> {
     try {
       const board = await this.boardRepository.find({
         where: { userIdx, use_yn: true },
