@@ -1,5 +1,7 @@
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { AuthUser } from 'src/auth/auth.decorator';
+import { GqlAuthGuard } from 'src/auth/auth.guard';
 import { OutputDto } from 'src/common/output.dto';
 import { CreateUserDto } from './dto/create-user-dto';
 import { EditUserDto } from './dto/edit-user-dto';
@@ -24,6 +26,7 @@ export class UserResolver {
   }
 
   @Mutation(() => OutputDto)
+  @UseGuards(GqlAuthGuard)
   editUser(
     @AuthUser() authUser: User,
     @Args('input') editUserDto: EditUserDto,

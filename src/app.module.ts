@@ -36,9 +36,6 @@ const format = winston.format.combine(
       debug: true,
       playground: true,
       autoSchemaFile: 'schema.gql',
-      context: ({ req }) => {
-        return { token: req.headers['token'] };
-      },
     }),
     WinstonModule.forRoot({
       transports: [
