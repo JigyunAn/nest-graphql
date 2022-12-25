@@ -109,6 +109,11 @@ export class BoardService {
     try {
       const boardInfo = await this.boardRepository.findOne({ idx: boardIdx });
       if (boardInfo.userIdx != userIdx) {
+        this.log.error('[deleteBoard]', {
+          inputData: { userIdx, boardIdx },
+          error: '본인이 작성한 게시글만 삭제 가능합니다.',
+        });
+
         return {
           status: false,
           error: '본인이 작성한 게시글만 삭제 가능합니다.',
