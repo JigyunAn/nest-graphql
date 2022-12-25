@@ -8,12 +8,15 @@ import { AddReCommentDto } from './dto/add-re-comment.dto';
 import { BoardOutputDto, BoardsOutputDto } from './dto/board.dto';
 import { CreateBoardDto } from './dto/create-board-dto';
 import { Board } from './entities/board.entity';
+import { GqlAuthGuard } from 'src/auth/auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver((of) => Board)
 export class BoardResolver {
   constructor(private readonly boardService: BoardService) {}
 
   @Mutation(() => OutputDto)
+  @UseGuards(GqlAuthGuard)
   createBoard(
     @AuthUser() authUser: User,
     @Args('input') createBoardDto: CreateBoardDto,
@@ -37,6 +40,7 @@ export class BoardResolver {
   }
 
   @Mutation(() => OutputDto)
+  @UseGuards(GqlAuthGuard)
   deleteBoard(
     @AuthUser() authUser: User,
     @Args('input') boardIdx: number,
@@ -45,11 +49,13 @@ export class BoardResolver {
   }
 
   @Query(() => BoardsOutputDto)
+  @UseGuards(GqlAuthGuard)
   findBoardByUser(@AuthUser() authUser: User): Promise<BoardsOutputDto> {
     return this.boardService.findBoardByUser(authUser.idx);
   }
 
   @Mutation(() => OutputDto)
+  @UseGuards(GqlAuthGuard)
   addComment(
     @AuthUser() authUser: User,
     addCommentDto: AddCommentDto,
@@ -58,6 +64,7 @@ export class BoardResolver {
   }
 
   @Mutation(() => OutputDto)
+  @UseGuards(GqlAuthGuard)
   addReComment(
     @AuthUser() authUser: User,
     addReCommentDto: AddReCommentDto,

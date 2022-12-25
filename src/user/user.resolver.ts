@@ -34,6 +34,7 @@ export class UserResolver {
     return this.userService.editUser(authUser.idx, editUserDto);
   }
 
+  @UseGuards(GqlAuthGuard)
   @Mutation(() => OutputDto)
   deleteUser(@AuthUser() authUser: User): Promise<OutputDto> {
     return this.userService.deleteUser(authUser.idx);
