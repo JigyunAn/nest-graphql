@@ -21,7 +21,7 @@ type Comment {
   description: String!
   created_at: DateTime
   updated_at: DateTime
-  uesr: User!
+  user: User!
   board: Board!
   reComments: [ReComment!]!
 }
@@ -30,6 +30,7 @@ type Board {
   idx: Int!
   title: String!
   description: String!
+  use_yn: Boolean!
   created_at: DateTime
   updated_at: DateTime
   user: User!
@@ -60,14 +61,34 @@ type LoginUserOutputDto {
   token: String
 }
 
+type BoardsOutputDto {
+  error: String
+  status: Boolean!
+  board: [Board!]
+}
+
+type BoardOutputDto {
+  error: String
+  status: Boolean!
+  board: Board
+}
+
 type Query {
-  deleteUser: OutputDto!
+  findAllBoard: BoardsOutputDto!
+  findBoardById(input: Float!): BoardOutputDto!
+  serchBoard(input: String!): BoardsOutputDto!
+  findBoardByUser: BoardsOutputDto!
 }
 
 type Mutation {
   createUser(input: CreateUserDto!): OutputDto!
   login(input: LoginUserDto!): LoginUserOutputDto!
   editUser(input: EditUserDto!): OutputDto!
+  deleteUser: OutputDto!
+  createBoard(input: CreateBoardDto!): OutputDto!
+  deleteBoard(input: Float!): OutputDto!
+  addComment: OutputDto!
+  addReComment: OutputDto!
 }
 
 input CreateUserDto {
@@ -85,4 +106,9 @@ input EditUserDto {
   email: String
   password: String
   nickname: String
+}
+
+input CreateBoardDto {
+  title: String!
+  description: String!
 }

@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { WINSTON_MODULE_PROVIDER } from 'nest-winston';
 import { OutputDto } from 'src/common/output.dto';
 import { User } from 'src/user/entities/user.entity';
 import { Like, Repository } from 'typeorm';
@@ -10,6 +11,7 @@ import { CreateBoardDto } from './dto/create-board-dto';
 import { Board } from './entities/board.entity';
 import { Comment } from './entities/comment.entity';
 import { ReComment } from './entities/re_comment.entity';
+import { Logger as WinLog } from 'winston';
 
 @Injectable()
 export class BoardService {
@@ -20,6 +22,8 @@ export class BoardService {
     private readonly commentRepository: Repository<Comment>,
     @InjectRepository(ReComment)
     private readonly reCommentRepository: Repository<ReComment>,
+    @Inject(WINSTON_MODULE_PROVIDER)
+    private readonly log: WinLog,
   ) {}
 
   async createBoard(
@@ -37,6 +41,11 @@ export class BoardService {
 
       return { status: true };
     } catch (err) {
+      this.log.error('[createBoard]', {
+        inputData: { user, createBoardDto },
+        error: err,
+      });
+
       return { status: false, error: err };
     }
   }
@@ -51,6 +60,11 @@ export class BoardService {
 
       return { status: true, board };
     } catch (err) {
+      this.log.error('[findAllBoard]', {
+        inputData: '',
+        error: err,
+      });
+
       return { status: false, error: err };
     }
   }
@@ -63,6 +77,11 @@ export class BoardService {
 
       return { status: true, board };
     } catch (err) {
+      this.log.error('[findBoardById]', {
+        inputData: { boardIdx },
+        error: err,
+      });
+
       return { status: false, error: err };
     }
   }
@@ -77,6 +96,11 @@ export class BoardService {
       });
       return { status: true, board };
     } catch (err) {
+      this.log.error('[serchBoard]', {
+        inputData: { keyword },
+        error: err,
+      });
+
       return { status: false, error: err };
     }
   }
@@ -95,6 +119,11 @@ export class BoardService {
 
       return { status: true };
     } catch (err) {
+      this.log.error('[deleteBoard]', {
+        inputData: { userIdx, boardIdx },
+        error: err,
+      });
+
       return { status: false, error: err };
     }
   }
@@ -107,6 +136,11 @@ export class BoardService {
 
       return { status: true, board };
     } catch (err) {
+      this.log.error('[findBoardByUser]', {
+        inputData: { userIdx },
+        error: err,
+      });
+
       return { status: false, error: err };
     }
   }
@@ -129,6 +163,11 @@ export class BoardService {
 
       return { status: true };
     } catch (err) {
+      this.log.error('[addComment]', {
+        inputData: { user, addCommentDto },
+        error: err,
+      });
+
       return { status: false, error: err };
     }
   }
@@ -152,6 +191,11 @@ export class BoardService {
 
       return { status: true };
     } catch (err) {
+      this.log.error('[addReComment]', {
+        inputData: { user, addReCommentDto },
+        error: err,
+      });
+
       return { status: false, error: err };
     }
   }
