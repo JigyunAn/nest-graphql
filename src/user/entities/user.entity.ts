@@ -51,7 +51,7 @@ export class User {
   boards: Board[];
 
   @Field(() => [Comment])
-  @OneToMany(() => Comment, (comment) => comment.uesr)
+  @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
 
   @Field(() => [ReComment])

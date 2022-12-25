@@ -9,6 +9,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  RelationId,
   UpdateDateColumn,
 } from 'typeorm';
 
@@ -33,13 +34,19 @@ export class Comment {
 
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.comments)
-  uesr: User;
+  user: User;
+
+  @RelationId((comment: Comment) => comment.user)
+  userIdx: number;
 
   @Field(() => Board)
   @ManyToOne(() => Board, (board) => board.comments)
   board: Board;
 
+  @RelationId((comment: Comment) => comment.board)
+  boardIdx: number;
+
   @Field(() => [ReComment])
-  @OneToMany(() => ReComment, (reComment) => reComment.comment)
+  @OneToMany(() => ReComment, (reComment) => reComment.comment, { eager: true })
   reComments: ReComment[];
 }

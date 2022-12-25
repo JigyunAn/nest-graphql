@@ -7,6 +7,7 @@ import {
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
+  RelationId,
   UpdateDateColumn,
 } from 'typeorm';
 
@@ -32,6 +33,9 @@ export class ReComment {
   @Field(() => Comment)
   @ManyToOne(() => Comment, (comment) => comment.reComments)
   comment: Comment;
+
+  @RelationId((reComment: ReComment) => reComment.comment)
+  commentIdx: number;
 
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.reComments)

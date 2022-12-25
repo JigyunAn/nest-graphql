@@ -3,6 +3,6 @@ import { BoardService } from './board.service';
 import { BoardResolver } from './board.resolver';
 
 @Module({
-  providers: [BoardService, BoardResolver]
+  providers: [BoardService, BoardResolver],
 })
 export class BoardModule {}

@@ -8,6 +8,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  RelationId,
   UpdateDateColumn,
 } from 'typeorm';
 
@@ -26,6 +27,10 @@ export class Board {
   @Field(() => String)
   description: string;
 
+  @Column({ default: true, type: 'boolean' })
+  @Field(() => Boolean)
+  use_yn: boolean;
+
   @CreateDateColumn()
   @Field(() => Date, { nullable: true })
   created_at: Date;
@@ -37,6 +42,9 @@ export class Board {
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.boards)
   user: User;
+
+  @RelationId((board: Board) => board.user)
+  userIdx: number;
 
   @Field(() => [Comment])
   @OneToMany(() => Comment, (comment) => comment.board)
